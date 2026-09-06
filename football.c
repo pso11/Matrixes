@@ -15,15 +15,24 @@ int main(void)
          team_scores[i] = my_rand(10);
     }
 
+    printf("     ");
+    for (int i = 0; i < num_teams; i++)
+    {
+        printf ("%-5d ", i + 1);
+    }
+    printf("\n");
 
+    printf("%d\n", 1);
     for (int y = 2; y <= num_teams; y++)
     {
+        printf("%d", y);
         for (int x = 0; x < y - 1; x++)
         {
             printf("%5d ", *(team_scores + ((y - 2) * (y - 1)) / 2 + x));
         }
         printf("\n");
     }
+
     free(team_scores);
 }
 
