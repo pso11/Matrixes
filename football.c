@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 int my_rand(int abs_range);
+
+const int table_width = 5;
  
 int main(void)
 {
@@ -12,23 +14,23 @@ int main(void)
    int* team_scores = (int*)malloc( (((num_teams - 1) * num_teams) / 2) * sizeof(int) );
    for (int i = 0; i < ((num_teams - 1) * num_teams) / 2; i++)
     {
-         team_scores[i] = my_rand(10);
+         team_scores[i] = my_rand(5);
     }
 
-    printf("     ");
+    printf("%*s", table_width, " ");
     for (int i = 0; i < num_teams; i++)
     {
-        printf ("%-5d ", i + 1);
+        printf ("%*d ", table_width, i + 1);
     }
     printf("\n");
 
-    printf("%d\n", 1);
+    printf("%*d\n", table_width, 1);
     for (int y = 2; y <= num_teams; y++)
     {
-        printf("%d", y);
+        printf("%*d", table_width, y);
         for (int x = 0; x < y - 1; x++)
         {
-            printf("%5d ", *(team_scores + ((y - 2) * (y - 1)) / 2 + x));
+            printf("%*d ", table_width, *(team_scores + ((y - 2) * (y - 1)) / 2 + x));
         }
         printf("\n");
     }
