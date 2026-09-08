@@ -1,46 +1,67 @@
+#include <TXLib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
+const int table_width = 5;
+
+int* matrix_input(int lines, int columns);
 void print_matrix(int* matrix, int lines, int columns);
-int* addition_2_matrix(int* matrix1, int* matrix2);
-
-const int lines_1 = 5, columns_1 = 4, lines_2 = 5, columns_2 = 4, table_width = 5;
+int* calculating_result_matrix(int** matrix_pointers, int lines, int columns, int number_matrixes);
 
 int main(void)
 {
-    if (lines_1 != lines_2 && columns_1 != columns_2)
+    printf("How many matrixes do you wanna fold?: ");
+    int number_matrixes = 0;
+    scanf("%d", &number_matrixes);
+    assert(number_matrixes >= 2);
+
+    printf("Enter number of lines in each matrix: ");
+    int lines = 0;
+    scanf("%d", &lines);
+    printf("Enter number of columns in each  matrix: ");
+    int columns = 0;
+    scanf("%d", &columns);
+
+    int** matrix_pointers = (int**)calloc(number_matrixes, sizeof(int*));
+
+    for (int i = 0; i < number_matrixes; i++)
     {
-        printf("You entered wrong data");
-        exit(EXIT_SUCCESS);
+        printf("\nMatrix %d: \n", i + 1);
+        matrix_pointers[i] = matrix_input(lines, columns); 
+    }
+    for (int i = 0; i < number_matrixes; i++)
+    {
+        printf("Matrix %d \n", i + 1);
+        print_matrix(matrix_pointers[i], lines, columns);
     }
 
-    int matrix1[lines_1][columns_1] =
+    printf("Result of folding all matrixes: \n");
+
+    int* result_pointer = calculating_result_matrix(matrix_pointers, lines, columns, number_matrixes);
+    print_matrix(result_pointer, lines, columns);
+    free(result_pointer);
+
+    for (int i = 0; i < number_matrixes; i++)
+        free(matrix_pointers[i]);
+    free(matrix_pointers);
+
+}
+
+int* matrix_input(int lines, int columns)
+{
+    int* matrix = (int*)calloc(lines * columns, sizeof(int));
+
+    printf("Enter matrix coefficents: \n");
+    for (int y = 0; y < lines; y++)
     {
-        {0, 2, 3, 4},
-        {11, 12, 13, 14}, 
-        {21, 22, 23, 24},
-        {31, 32, 33, 34},
-        {41, 42, 43, 44}
-    };
-    int matrix2[lines_2][columns_2] =
-    {
-        {2, 3, 4, 5},
-        {12, 13, 14, 15}, 
-        {22, 23, 24, 25},
-        {32, 33, 34, 35},
-        {42, 43, 44,45}
-    };
-
-    printf("Matrix 1\n\n");
-    print_matrix((int*)matrix1, lines_1, columns_1);
-
-    printf("Matrix 2\n\n");
-    print_matrix((int*)matrix2, lines_2, columns_2);
-
-    printf("Result of folding to matrixes:\n\n");
-    print_matrix( addition_2_matrix((int*)matrix1, (int*)matrix2), lines_1, columns_1 );
-
-    return 0;
+        for (int x = 0; x < columns; x++)
+        {
+            printf("[%d][%d]: ", y + 1, x + 1);
+            scanf("%d", matrix + y * columns + x);
+        }
+    }
+    return matrix;
 }
 
 void print_matrix(int* matrix, int lines, int columns)
@@ -56,15 +77,18 @@ void print_matrix(int* matrix, int lines, int columns)
     printf("\n");
 }
 
-int* addition_2_matrix(int* matrix1, int* matrix2)
+int* calculating_result_matrix(int** matrix_pointers, int lines, int columns, int number_matrixes)
 {
-    static int matrix_result[lines_1][columns_1] = {};
-    for (int y = 0; y < lines_1; y++)
+    int* matrix_result = (int*)calloc(lines * columns, sizeof(int));
+    for (int i = 0; i < number_matrixes; i++)
     {
-        for (int x = 0; x < columns_1; x++)
-        { 
-            matrix_result[y][x] = *(matrix1 + y * columns_1 + x) + *(matrix2 + y * columns_1 + x);
+        for (int y = 0; y < lines; y++)
+        {
+            for (int x = 0; x < columns; x++)
+            { 
+                *(matrix_result + y * columns + x) += *(matrix_pointers[i] + y * columns + x);
+            }
         }
     }
-    return (int*)matrix_result;
+    return matrix_result;
 }
