@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <cstdlib>
 
 void print_matrix(int* matrix, int lines, int columns);
 int* multiplication_2_matrix(int* matrix1, int* matrix2);
 
-const int lines_1 = 5, columns_1 = 5, lines_2 = 5, columns_2 = 5;
+const int lines_1 = 5, columns_1 = 5, lines_2 = 5, columns_2 = 5, table_width = 5;
 
 int main(void)
 {
+     if (columns_1 != lines_2)
+    {
+        printf("Error!!!! Wrong data");
+        exit(EXIT_SUCCESS);
+    }
+
     int matrix1[lines_1][columns_1] =
     {
         {1, 2, 3, 4, 5},
@@ -39,15 +44,11 @@ int main(void)
 
 void print_matrix(int* matrix, int lines, int columns)
 {
-    if (columns_1 != lines_2)
-    {
-        printf("Error!!!! Wrong data");
-    }
     for (int y = 0; y < lines; y++)
     {
         for (int x = 0; x < columns; x++)
         {
-            printf("%5d ", *(matrix + y * columns + x));
+            printf("%*d ", table_width, *(matrix + y * columns + x));
         }
         printf("\n");
     }
@@ -69,6 +70,4 @@ int* multiplication_2_matrix(int* matrix1, int* matrix2)
     }
     return (int*)matrix_result;
 }
-
-
 
